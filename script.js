@@ -20,6 +20,8 @@ async function statusServidor(){
   }
 }
 
+statusServidor();
+
 async function listarClientes(){
   const URL = "http://localhost:3000/clientes";
   try {
@@ -34,7 +36,6 @@ async function listarClientes(){
 
     const clientes = await response.json();
     console.log(clientes);
-
     return clientes;
 
   } catch (error) {
@@ -42,19 +43,32 @@ async function listarClientes(){
   }
 }
 
-function editar(id) {
-  alert("Editar", id);
-};
+async function buscarClientePorId(id){
+  const URL = "http://localhost:3000/cliente?id="+ id;
+  try {
+    const response = await fetch(URL, {
+      method: "GET",
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      }
+    });
 
-function deletar(id) {
-  alert("Deletar", id);
-};
+    const cliente = await response.json();
+    return cliente;
+
+  } catch (error) {
+    console.error("Ocorreu um erro:", error);
+  }
+}
 
 const getTableBody = document.querySelector('tbody');
 async function createTr() {
   const clientes = await listarClientes();
-  console.log("foi", clientes);  
 
+  //Percorre a lista de clientes e
+  //cria as linnhas da tabela
   const tr = clientes.map((cliente) => {
     return `<tr>
         <td>${cliente.id}</td>  
@@ -62,11 +76,20 @@ async function createTr() {
         <td>${cliente.email}</td>
         <td>${cliente.anoNacimento}</td>
         <td>
-          <i class="bi bi-pencil-square" onclick="editar(${cliente.id})"></i>
-          <i class="bi bi-trash" onclick="deletar(${cliente.id})"></i>
+          <button type="button" onclick="editar(${cliente.id})">Editar</button>
+          <button type="button" onclick="deletar(${cliente.id})">Excluir</button>
         </td>  
       </tr>`
   }).join('');
   getTableBody.innerHTML = tr;
 }
+
+async function editar(id) {
+  const cliente = await buscarClientePorId(id);
+  console.log(cliente);
+};
+
+function deletar(id) {
+  alert("Deletar id"+ id);
+};
 
