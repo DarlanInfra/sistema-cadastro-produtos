@@ -149,13 +149,6 @@ async function createTr() {
   getTableBody.innerHTML = tr;
 }
 
-//Obtem as referencias dos formulários
-const form = document.getElementById("formulario");
-const nomeIdentificador = document.getElementById("identificador");
-const nomeForm = document.getElementById("nome");
-const emailForm = document.getElementById("email");
-const anoNascimentoForm = document.getElementById("anoNascimento");
-
 function registrar(){
   const id = nomeIdentificador.value;
 
@@ -166,6 +159,13 @@ function registrar(){
     alterar();
   }
 }
+
+//Obtem as referencias dos formulários
+const form = document.getElementById("formulario");
+const nomeIdentificador = document.getElementById("identificador");
+const nomeForm = document.getElementById("nome");
+const emailForm = document.getElementById("email");
+const anoNascimentoForm = document.getElementById("anoNascimento");
 
 async function cadastrar() {
   const cliente = {
