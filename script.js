@@ -149,23 +149,25 @@ async function createTr() {
   getTableBody.innerHTML = tr;
 }
 
-function registrar(){
-  const id = nomeIdentificador.value;
-
-  //Veririca se ser
-  if(id == "" || id == "0"){
-    cadastrar();
-  }else{
-    alterar();
-  }
-}
-
 //Obtem as referencias dos formulários
 const form = document.getElementById("formulario");
 const nomeIdentificador = document.getElementById("identificador");
 const nomeForm = document.getElementById("nome");
 const emailForm = document.getElementById("email");
 const anoNascimentoForm = document.getElementById("anoNascimento");
+
+function registrar(){
+  const id = nomeIdentificador.value;
+
+  //Veririca o tipo da operação 
+  //se será cadastrar um novo registro
+  //ou alterar um registro existente
+  if(id == "" || id == "0"){
+    cadastrar();
+  }else{
+    alterar();
+  }
+}
 
 async function cadastrar() {
   const cliente = {
