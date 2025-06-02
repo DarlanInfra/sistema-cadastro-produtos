@@ -13,9 +13,9 @@ exports.Produto = void 0;
 const typeorm_1 = require("typeorm");
 let Produto = class Produto {
     codigo;
+    nome;
+    preco;
     descricao;
-    marca;
-    valor;
 };
 exports.Produto = Produto;
 __decorate([
@@ -23,17 +23,17 @@ __decorate([
     __metadata("design:type", Number)
 ], Produto.prototype, "codigo", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 30 }),
+    (0, typeorm_1.Column)({ length: 100 }),
+    __metadata("design:type", String)
+], Produto.prototype, "nome", void 0);
+__decorate([
+    (0, typeorm_1.Column)('decimal', { precision: 10, scale: 2 }),
+    __metadata("design:type", Number)
+], Produto.prototype, "preco", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 500, nullable: true }),
     __metadata("design:type", String)
 ], Produto.prototype, "descricao", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ length: 30 }),
-    __metadata("design:type", String)
-], Produto.prototype, "marca", void 0);
-__decorate([
-    (0, typeorm_1.Column)('decimal', { precision: 8, scale: 2 }),
-    __metadata("design:type", Number)
-], Produto.prototype, "valor", void 0);
 exports.Produto = Produto = __decorate([
     (0, typeorm_1.Entity)('produto')
 ], Produto);

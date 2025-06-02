@@ -5,12 +5,12 @@ export class Produto {
     @PrimaryGeneratedColumn()
     codigo: number;
 
-    @Column({ length: 30 })
+    @Column({ length: 100 })
+    nome: string;
+
+    @Column('decimal', { precision: 10, scale: 2 })
+    preco: number;
+
+    @Column({ length: 500, nullable: true })
     descricao: string;
-
-    @Column({ length: 30 })
-    marca: string;
-
-    @Column('decimal', { precision: 8, scale: 2 })
-    valor: number;
 } 

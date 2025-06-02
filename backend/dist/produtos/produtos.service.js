@@ -22,21 +22,27 @@ let ProdutosService = class ProdutosService {
     constructor(produtosRepository) {
         this.produtosRepository = produtosRepository;
     }
-    findAll() {
+    async findAll() {
         return this.produtosRepository.find();
     }
-    findOne(codigo) {
-        return this.produtosRepository.findOneBy({ codigo });
+    async findOne(codigo) {
+        const produto = await this.produtosRepository.findOne({ where: { codigo } });
+        if (!produto) {
+            throw new common_1.NotFoundException(`Produto com código ${codigo} não encontrado`);
+        }
+        return produto;
     }
-    create(produto) {
+    async create(produto) {
         return this.produtosRepository.save(produto);
     }
     async update(codigo, produto) {
-        await this.produtosRepository.update(codigo, produto);
-        return this.findOne(codigo);
+        const produtoExistente = await this.findOne(codigo);
+        const produtoAtualizado = this.produtosRepository.merge(produtoExistente, produto);
+        return this.produtosRepository.save(produtoAtualizado);
     }
     async remove(codigo) {
-        await this.produtosRepository.delete(codigo);
+        const produto = await this.findOne(codigo);
+        await this.produtosRepository.remove(produto);
     }
 };
 exports.ProdutosService = ProdutosService;

@@ -22,26 +22,22 @@ let ProdutosController = class ProdutosController {
         this.produtosService = produtosService;
     }
     getStatus() {
-        return 'API funcionando!';
+        return 'API de Produtos funcionando!';
     }
     findAll() {
         return this.produtosService.findAll();
     }
-    findOne(codigo) {
-        return this.produtosService.findOne(+codigo);
-    }
     create(produto) {
         return this.produtosService.create(produto);
     }
-    async update(codigo, produto) {
-        const produtoAtualizado = await this.produtosService.update(+codigo, produto);
-        if (!produtoAtualizado) {
-            throw new Error('Produto não encontrado');
-        }
-        return produtoAtualizado;
+    findOne(codigo) {
+        return this.produtosService.findOne(codigo);
+    }
+    update(codigo, produto) {
+        return this.produtosService.update(codigo, produto);
     }
     remove(codigo) {
-        return this.produtosService.remove(+codigo);
+        return this.produtosService.remove(codigo);
     }
 };
 exports.ProdutosController = ProdutosController;
@@ -58,13 +54,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProdutosController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)('produto'),
-    __param(0, (0, common_1.Query)('codigo')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ProdutosController.prototype, "findOne", null);
-__decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -72,18 +61,25 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProdutosController.prototype, "create", null);
 __decorate([
+    (0, common_1.Get)('cliente'),
+    __param(0, (0, common_1.Query)('codigo')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProdutosController.prototype, "findOne", null);
+__decorate([
     (0, common_1.Put)(':codigo'),
     __param(0, (0, common_1.Param)('codigo')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, produto_entity_1.Produto]),
+    __metadata("design:paramtypes", [Number, produto_entity_1.Produto]),
     __metadata("design:returntype", Promise)
 ], ProdutosController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':codigo'),
     __param(0, (0, common_1.Param)('codigo')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProdutosController.prototype, "remove", null);
 exports.ProdutosController = ProdutosController = __decorate([

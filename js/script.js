@@ -236,3 +236,138 @@ async function statusServidor(){
     //Atualizar os dados da tabela
     createTr();
   };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const API_URL = 'http://localhost:3000';
+    const formulario = document.getElementById('formulario');
+    const btRegistrar = document.getElementById('btregistar');
+    const tabela = document.querySelector('tbody');
+
+    // Carregar produtos ao iniciar
+    carregarProdutos();
+
+    // Evento de registro/atualização
+    btRegistrar.addEventListener('click', async () => {
+        const codigo = document.getElementById('codigo').value;
+        const produto = {
+            descricao: document.getElementById('descricao').value,
+            marca: document.getElementById('marca').value,
+            valor: parseFloat(document.getElementById('valor').value)
+        };
+
+        try {
+            if (codigo) {
+                // Atualizar produto existente
+                await fetch(`${API_URL}/${codigo}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(produto)
+                });
+            } else {
+                // Incluir novo produto
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(produto)
+                });
+            }
+            formulario.reset();
+            carregarProdutos();
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao processar a operação');
+        }
+    });
+
+    // Carregar produtos
+    async function carregarProdutos() {
+        try {
+            const response = await fetch(`${API_URL}/produtos`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const produtos = await response.json();
+            tabela.innerHTML = '';
+            
+            if (Array.isArray(produtos)) {
+                produtos.forEach(produto => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${produto.codigo}</td>
+                        <td>${produto.descricao}</td>
+                        <td>${produto.marca}</td>
+                        <td>R$ ${Number(produto.valor).toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editarProduto(${produto.codigo})">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="excluirProduto(${produto.codigo})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tabela.appendChild(tr);
+                });
+            } else {
+                console.error('Dados recebidos não são um array:', produtos);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao carregar produtos');
+        }
+    }
+
+    // Editar produto
+    window.editarProduto = async (codigo) => {
+        try {
+            const response = await fetch(`${API_URL}/produto?codigo=${codigo}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const produto = await response.json();
+            
+            document.getElementById('codigo').value = produto.codigo;
+            document.getElementById('descricao').value = produto.descricao;
+            document.getElementById('marca').value = produto.marca;
+            document.getElementById('valor').value = produto.valor;
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao carregar produto');
+        }
+    };
+
+    // Excluir produto
+    window.excluirProduto = async (codigo) => {
+        if (confirm('Deseja realmente excluir este produto?')) {
+            try {
+                const response = await fetch(`${API_URL}/${codigo}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                carregarProdutos();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao excluir produto');
+            }
+        }
+    };
+});

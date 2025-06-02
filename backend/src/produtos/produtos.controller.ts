@@ -8,7 +8,7 @@ export class ProdutosController {
 
   @Get()
   getStatus(): string {
-    return 'API funcionando!';
+    return 'API de Produtos funcionando!';
   }
 
   @Get('produtos')
@@ -16,27 +16,23 @@ export class ProdutosController {
     return this.produtosService.findAll();
   }
 
-  @Get('produto')
-  findOne(@Query('codigo') codigo: string): Promise<Produto | null> {
-    return this.produtosService.findOne(+codigo);
-  }
-
   @Post()
   create(@Body() produto: Produto): Promise<Produto> {
     return this.produtosService.create(produto);
   }
 
+  @Get('cliente')
+  findOne(@Query('codigo') codigo: number): Promise<Produto> {
+    return this.produtosService.findOne(codigo);
+  }
+
   @Put(':codigo')
-  async update(@Param('codigo') codigo: string, @Body() produto: Produto): Promise<Produto | null> {
-    const produtoAtualizado = await this.produtosService.update(+codigo, produto);
-    if (!produtoAtualizado) {
-      throw new Error('Produto não encontrado');
-    }
-    return produtoAtualizado;
+  update(@Param('codigo') codigo: number, @Body() produto: Produto): Promise<Produto> {
+    return this.produtosService.update(codigo, produto);
   }
 
   @Delete(':codigo')
-  remove(@Param('codigo') codigo: string): Promise<void> {
-    return this.produtosService.remove(+codigo);
+  remove(@Param('codigo') codigo: number): Promise<void> {
+    return this.produtosService.remove(codigo);
   }
 } 

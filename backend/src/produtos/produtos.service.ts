@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Produto } from './entities/produto.entity';
@@ -10,24 +10,30 @@ export class ProdutosService {
     private produtosRepository: Repository<Produto>,
   ) {}
 
-  findAll(): Promise<Produto[]> {
+  async findAll(): Promise<Produto[]> {
     return this.produtosRepository.find();
   }
 
-  findOne(codigo: number): Promise<Produto | null> {
-    return this.produtosRepository.findOneBy({ codigo });
+  async findOne(codigo: number): Promise<Produto> {
+    const produto = await this.produtosRepository.findOne({ where: { codigo } });
+    if (!produto) {
+      throw new NotFoundException(`Produto com código ${codigo} não encontrado`);
+    }
+    return produto;
   }
 
-  create(produto: Produto): Promise<Produto> {
+  async create(produto: Produto): Promise<Produto> {
     return this.produtosRepository.save(produto);
   }
 
-  async update(codigo: number, produto: Produto): Promise<Produto | null> {
-    await this.produtosRepository.update(codigo, produto);
-    return this.findOne(codigo);
+  async update(codigo: number, produto: Produto): Promise<Produto> {
+    const produtoExistente = await this.findOne(codigo);
+    const produtoAtualizado = this.produtosRepository.merge(produtoExistente, produto);
+    return this.produtosRepository.save(produtoAtualizado);
   }
 
   async remove(codigo: number): Promise<void> {
-    await this.produtosRepository.delete(codigo);
+    const produto = await this.findOne(codigo);
+    await this.produtosRepository.remove(produto);
   }
 } 

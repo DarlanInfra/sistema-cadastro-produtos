@@ -12,7 +12,9 @@ import { ProdutosModule } from './produtos/produtos.module';
       password: 'admin',
       database: 'produtos_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, // Mantenha false em produção
+      synchronize: true, // Ativado para desenvolvimento
+      autoLoadEntities: true,
+      logging: true, // Ativa logs do SQL
     }),
     ProdutosModule,
   ],

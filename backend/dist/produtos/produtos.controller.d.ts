@@ -5,8 +5,8 @@ export declare class ProdutosController {
     constructor(produtosService: ProdutosService);
     getStatus(): string;
     findAll(): Promise<Produto[]>;
-    findOne(codigo: string): Promise<Produto | null>;
     create(produto: Produto): Promise<Produto>;
-    update(codigo: string, produto: Produto): Promise<Produto | null>;
-    remove(codigo: string): Promise<void>;
+    findOne(codigo: number): Promise<Produto>;
+    update(codigo: number, produto: Produto): Promise<Produto>;
+    remove(codigo: number): Promise<void>;
 }
